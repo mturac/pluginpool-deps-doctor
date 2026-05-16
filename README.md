@@ -11,9 +11,19 @@
 
 > **TL;DR:** `/deps-doctor` → unified vuln/outdated/license report across npm, pip, cargo, and go in one pass.
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## Why this exists
 
 Polyglot repos make dependency hygiene awkward — you end up with three different reports in three different terminals, and you forget which one was for staging. `deps-doctor` detects which ecosystems are present, shells out to the audit tools you actually have installed, and emits one consistent report. Missing tool? It says "skipped: tool not installed" — never silently green.
+
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
 
 ## Install (Claude Code)
 
@@ -22,6 +32,11 @@ git clone https://github.com/mturac/pluginpool-deps-doctor ~/.claude/plugins/dep
 ```
 
 Restart Claude Code; the slash command `/deps-doctor` appears.
+
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
 
 ## Quick start
 
@@ -36,6 +51,11 @@ python3 scripts/doctor.py --format md
 python3 scripts/doctor.py --severity high --ecosystem npm,pip
 ```
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## Flags
 
 | Flag | Default | Description |
@@ -43,6 +63,11 @@ python3 scripts/doctor.py --severity high --ecosystem npm,pip
 | `--format` | `json` | `json` or `md` |
 | `--severity` | _all_ | Minimum severity: `low | moderate | high | critical` |
 | `--ecosystem` | _all detected_ | Comma-separated subset, e.g. `npm,pip` |
+
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
 
 ## Supported ecosystems
 
@@ -55,9 +80,19 @@ python3 scripts/doctor.py --severity high --ecosystem npm,pip
 
 Missing tools are reported as `"status": "skipped: tool not installed"`, never as a clean pass.
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## Example output (markdown)
 
 ```
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## deps-doctor report
 
 ### npm — 2 critical, 1 high
@@ -71,6 +106,11 @@ Missing tools are reported as `"status": "skipped: tool not installed"`, never a
 ### go — clean
 ```
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## How it works
 
 1. Scans the project root for marker files (`package.json`, `Cargo.toml`, …).
@@ -78,15 +118,30 @@ Missing tools are reported as `"status": "skipped: tool not installed"`, never a
 3. Normalizes the JSON shapes from each tool into one schema.
 4. Aggregates by severity and renders.
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## Limitations
 
 - Network-only audits (registry lookups) inherit the speed of the underlying tool.
 - License auditing is a placeholder field (`license_warnings: []`) — populate via a future plugin.
 - Audit-tool installation is up to you; this plugin is glue, not an installer.
 
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
+
 ## Examples
 
 Step-by-step walkthroughs with real input fixtures and the helper's actual output live in [`examples/`](./examples/README.md). Three or four scenarios per plugin — from the happy path to the edge cases the test suite guards.
+
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
 
 ## Part of the pluginpool family
 
@@ -101,6 +156,11 @@ Ten focused Claude Code plugins for everyday productivity:
 [todo-harvest](https://github.com/mturac/pluginpool-todo-harvest) ·
 [flaky-detector](https://github.com/mturac/pluginpool-flaky-detector) ·
 [changelog-forge](https://github.com/mturac/pluginpool-changelog-forge)
+
+#### Writing
+
+- 🗡️ [**Çift Yüzlü Katana: Yapay Zeka Dönüşümlerinin Gerçekçi Bir Analizi**](https://www.linkedin.com/pulse/%C3%A7ift-y%C3%BCzl%C3%BC-katana-yapay-zeka-d%C3%B6n%C3%BC%C5%9F%C3%BCmlerinin-ger%C3%A7ek%C3%A7i-bir-mehmet-turac-80h7f) — AI transformations realistic analysis. The 5 illusions that compound into expensive, fragile systems. (LinkedIn, 2026)
+
 
 ## License
 
