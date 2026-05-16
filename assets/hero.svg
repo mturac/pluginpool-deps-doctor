@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" width="1200" height="320" role="img" aria-label="deps-doctor — One report across npm, pip, cargo, go.">
+      <defs>
+        <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0%" stop-color="#0d1117"/>
+          <stop offset="100%" stop-color="#161b22"/>
+        </linearGradient>
+        <linearGradient id="accentLine" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="0%" stop-color="#f85149" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#f85149" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#f85149" stop-opacity="0"/>
+        </linearGradient>
+      </defs>
+      <rect width="1200" height="320" fill="url(#bg)"/>
+      <rect x="0" y="0" width="1200" height="3" fill="url(#accentLine)"/>
+      <text x="60" y="130" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif" font-size="64" font-weight="800" fill="#e6edf3" letter-spacing="-1.5">deps-doctor</text>
+      <text x="60" y="175" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-size="22" fill="#f85149">/deps-doctor</text>
+      <text x="60" y="225" font-family="ui-sans-serif,system-ui,sans-serif" font-size="22" fill="#8b949e">One report across npm, pip, cargo, go.</text>
+      <g transform="translate(820,60)">
+    <rect x="0" y="40" width="310" height="32" rx="6" fill="#161b22" stroke="#30363d"/>
+    <text x="14" y="61" font-family="ui-monospace,monospace" font-size="14" fill="#f85149">npm    ● 2 high</text>
+    <rect x="0" y="80" width="310" height="32" rx="6" fill="#161b22" stroke="#30363d"/>
+    <text x="14" y="101" font-family="ui-monospace,monospace" font-size="14" fill="#56d364">pip    ● clean</text>
+    <rect x="0" y="120" width="310" height="32" rx="6" fill="#161b22" stroke="#30363d"/>
+    <text x="14" y="141" font-family="ui-monospace,monospace" font-size="14" fill="#56d364">cargo  ● clean</text>
+    <rect x="0" y="160" width="310" height="32" rx="6" fill="#161b22" stroke="#30363d"/>
+    <text x="14" y="181" font-family="ui-monospace,monospace" font-size="14" fill="#8b949e">go     ○ skipped: tool not installed</text>
+</g>
+      <text x="60" y="290" font-family="ui-monospace,monospace" font-size="13" fill="#6e7681">pluginpool · MIT · Python 3 stdlib only</text>
+    </svg>

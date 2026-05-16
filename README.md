@@ -1,3 +1,5 @@
+![hero](./assets/hero.svg)
+
 # deps-doctor
 
 **One slash command. Four ecosystems. Knows when an audit tool is missing — and doesn't pretend otherwise.**
