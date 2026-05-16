@@ -22,17 +22,44 @@ COMMANDS = {
 }
 
 
-def detect_ecosystems(root: Path = Path(".")) -> list[str]:
-    ecosystems: list[str] = []
-    if (root / "package.json").exists():
-        ecosystems.append("npm")
-    if (root / "requirements.txt").exists() or (root / "pyproject.toml").exists():
-        ecosystems.append("pip")
-    if (root / "Cargo.toml").exists():
-        ecosystems.append("cargo")
-    if (root / "go.mod").exists():
-        ecosystems.append("go")
-    return ecosystems
+_MARKERS = {
+    "npm": ("package.json",),
+    "pip": ("requirements.txt", "pyproject.toml"),
+    "cargo": ("Cargo.toml",),
+    "go": ("go.mod",),
+}
+
+_SKIP_DIRS = frozenset({
+    ".git", "node_modules", "vendor", "target", "dist", "build",
+    "__pycache__", ".venv", "venv", ".tox", ".mypy_cache", ".pytest_cache",
+})
+
+
+def detect_ecosystems(root: Path = Path("."), *, recursive: bool = False,
+                       max_depth: int = 3) -> list[str]:
+    """Detect ecosystem marker files. When ``recursive`` is true, descend up
+    to ``max_depth`` levels under ``root`` so monorepos with ``/frontend``,
+    ``/backend`` subdirectories surface every nested ecosystem.
+
+    Order of returned names is stable: npm, pip, cargo, go.
+    """
+    found: set[str] = set()
+
+    def _scan(path: Path, depth: int) -> None:
+        try:
+            entries = list(path.iterdir())
+        except (OSError, PermissionError):
+            return
+        for entry in entries:
+            if entry.is_file():
+                for eco, markers in _MARKERS.items():
+                    if entry.name in markers:
+                        found.add(eco)
+            elif recursive and entry.is_dir() and entry.name not in _SKIP_DIRS and depth < max_depth:
+                _scan(entry, depth + 1)
+
+    _scan(root, 0)
+    return [eco for eco in _MARKERS if eco in found]
 
 
 def run_audit(name: str) -> tuple[str | None, str | None]:
@@ -119,6 +146,26 @@ def cargo_advisories(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return advisories
 
 
+def _osv_fixed_versions(affected: Any) -> list[str]:
+    """Extract patched version strings from an OSV ``affected`` block.
+
+    govulncheck's payload nests them under ``ranges[].events[].fixed``. The
+    earlier ``fixed_in()`` helper just stringified the whole list, which is
+    useless to the operator. Returns sorted unique semver strings.
+    """
+    out: set[str] = set()
+    if not isinstance(affected, list):
+        return []
+    for entry in affected:
+        if not isinstance(entry, dict):
+            continue
+        for rng in entry.get("ranges", []) or []:
+            for event in (rng or {}).get("events", []) or []:
+                if isinstance(event, dict) and event.get("fixed"):
+                    out.add(str(event["fixed"]))
+    return sorted(out)
+
+
 def go_advisories(output: str) -> list[dict[str, Any]]:
     advisories: list[dict[str, Any]] = []
     for line in output.splitlines():
@@ -130,25 +177,55 @@ def go_advisories(output: str) -> list[dict[str, Any]]:
         osv = finding.get("osv") or finding
         if not osv:
             continue
+        # Walk the OSV ``affected`` ranges to pull the real ``fixed`` strings
+        # (e.g. ``0.0.0-20231228152506-xxx``) instead of leaking the raw dict.
+        fixed = _osv_fixed_versions(osv.get("affected", []))
+        # ``finding.trace`` (when present) often points to the offending package
+        # version that triggered the alert — surface that as ``version`` so the
+        # operator does not see an empty cell.
+        trace = finding.get("trace") or []
+        package = finding.get("package") or ""
+        version = ""
+        if isinstance(trace, list) and trace:
+            first = trace[0]
+            if isinstance(first, dict):
+                package = package or first.get("module") or first.get("package") or ""
+                version = str(first.get("version") or "")
         advisories.append({
             "id": str(osv.get("id", "")),
             "severity": normalize_severity(osv.get("database_specific", {}).get("severity")),
-            "package": finding.get("package", ""),
-            "version": "",
-            "fixed_in": fixed_in(osv.get("affected", [])),
+            "package": package,
+            "version": version,
+            "fixed_in": fixed,
         })
     return advisories
 
 
+class ParseFailed(Exception):
+    """Raised when an audit tool emitted output that we could not parse.
+
+    Surfacing this explicitly is the difference between a real "no advisories"
+    result and a silent failure — we never want a misformatted error blob to
+    be reported as a clean repository.
+    """
+
+
 def parse_advisories(name: str, output: str) -> list[dict[str, Any]]:
-    # govulncheck emits NDJSON (one JSON object per line); pass raw text through
-    # so the go parser can handle line-by-line. Other tools emit a single JSON document.
+    """Parse ``output`` produced by ``name``'s audit command into advisories.
+
+    Raises ``ParseFailed`` when the tool produced non-empty output that does
+    not parse as the expected format. The audit function catches that and
+    surfaces it on the per-ecosystem record so the run is not "silently
+    green" (review finding).
+    """
     if name == "go":
         return go_advisories(output)
-    try:
-        payload = json.loads(output or "{}")
-    except json.JSONDecodeError:
+    if not output.strip():
         return []
+    try:
+        payload = json.loads(output)
+    except json.JSONDecodeError as exc:
+        raise ParseFailed(f"{name} audit produced non-JSON output ({exc})") from exc
     if name == "npm":
         return npm_advisories(payload)
     if name == "pip":
@@ -166,14 +243,28 @@ def audit(ecosystems: list[str], minimum: str = "low") -> dict[str, list[dict[st
     results: list[dict[str, Any]] = []
     for name in ecosystems:
         output, skipped = run_audit(name)
-        advisories = [] if output is None else [item for item in parse_advisories(name, output) if severity_allowed(item, minimum)]
-        results.append({
+        if output is None:
+            advisories: list[dict[str, Any]] = []
+            parse_error: str | None = None
+        else:
+            try:
+                parsed = parse_advisories(name, output)
+            except ParseFailed as exc:
+                advisories, parse_error = [], str(exc)
+            else:
+                advisories = [item for item in parsed if severity_allowed(item, minimum)]
+                parse_error = None
+        record: dict[str, Any] = {
             "name": name,
             "advisories": advisories,
             "outdated_count": 0,
             "license_warnings": [],
-            **({"skipped": skipped} if skipped else {}),
-        })
+        }
+        if skipped:
+            record["skipped"] = skipped
+        if parse_error:
+            record["parse_error"] = parse_error
+        results.append(record)
     return {"ecosystems": results}
 
 
@@ -210,9 +301,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--format", choices=("json", "md"), default="json")
     parser.add_argument("--severity", choices=("low", "moderate", "high", "critical"), default="low")
     parser.add_argument("--ecosystem", help="Comma-separated ecosystem filter, e.g. npm,pip.")
+    parser.add_argument("--recursive", action="store_true",
+                        help="Recurse into subdirectories to find ecosystem marker files.")
+    parser.add_argument("--max-depth", type=int, default=3,
+                        help="Maximum directory depth when --recursive is set.")
     args = parser.parse_args(argv)
 
-    detected = detect_ecosystems()
+    detected = detect_ecosystems(recursive=args.recursive, max_depth=args.max_depth)
     if args.ecosystem:
         allowed = {item.strip() for item in args.ecosystem.split(",") if item.strip()}
         detected = [item for item in detected if item in allowed]
