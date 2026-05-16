@@ -82,6 +82,10 @@ Missing tools are reported as `"status": "skipped: tool not installed"`, never a
 - License auditing is a placeholder field (`license_warnings: []`) — populate via a future plugin.
 - Audit-tool installation is up to you; this plugin is glue, not an installer.
 
+## Examples
+
+Step-by-step walkthroughs with real input fixtures and the helper's actual output live in [`examples/`](./examples/README.md). Three or four scenarios per plugin — from the happy path to the edge cases the test suite guards.
+
 ## Part of the pluginpool family
 
 Ten focused Claude Code plugins for everyday productivity:

@@ -1,0 +1,21 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "axios": {
+      "name": "axios",
+      "severity": "high",
+      "via": [
+        {"source": 1098583, "name": "axios", "url": "https://github.com/advisories/GHSA-wf5p-g6vw-rhxx", "title": "Axios Cross-Site Request Forgery Vulnerability"}
+      ],
+      "range": "<1.6.0",
+      "fixAvailable": {"name": "axios", "version": "1.6.0"}
+    },
+    "lodash": {
+      "name": "lodash",
+      "severity": "moderate",
+      "via": [{"source": 1096305, "name": "lodash", "title": "Prototype Pollution in lodash"}],
+      "range": "<4.17.21",
+      "fixAvailable": {"name": "lodash", "version": "4.17.21"}
+    }
+  }
+}
